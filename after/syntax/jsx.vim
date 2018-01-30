@@ -34,6 +34,18 @@ endif
 " jsBlock take care of ending the region.
 syn region xmlString contained start=+{+ end=++ contains=jsBlock,javascriptBlock
 
+" XMLSyntax doesn't support JSXFragment so we need to add it.
+syn region   xmlTag
+\ matchgroup=xmlTag start=+<[^ /!?<"']\@=+
+\ matchgroup=xmlTag end=+>+
+\ contained
+\ contains=xmlError,xmlTagName,xmlAttrib,xmlEqual,xmlString,@xmlStartTagHook
+
+syn match   xmlEndTag
+\ +</[^ /!?<"']*>+
+\ contained
+\ contains=xmlNamespace,xmlAttribPunct,@xmlTagHook
+
 " JSX child blocks behave just like JSX attributes, except that (a) they are
 " syntactically distinct, and (b) they need the syn-extend argument, or else
 " nested XML end-tag patterns may end the outer jsxRegion.
@@ -45,12 +57,29 @@ syn region jsxChild contained start=+{+ end=++ contains=jsBlock,javascriptBlock
 " Note that we prohibit JSX tags from having a < or word character immediately
 " preceding it, to avoid conflicts with, respectively, the left shift operator
 " and generic Flow type annotations (http://flowtype.org/).
+" syn region jsxRegion
+"   \ contains=@Spell,@XMLSyntax,jsxRegion,jsxChild,jsBlock,javascriptBlock
+"   \ start=+\%(<\|\w\)\@<!<\z([a-zA-Z][a-zA-Z0-9:\-.]*\)+
+"   \ skip=+<!--\_.\{-}-->+
+"   \ end=+</\z1\_\s\{-}>+
+"   \ end=+/>+
+"   \ keepend
+"   \ extend
+" syn region jsxRegion
+"   \ contains=@Spell,@XMLSyntax,jsxRegion,jsxChild,jsBlock,javascriptBlock
+"   \ start=+\%(<\|\w\)\@<!<\z([a-zA-Z][a-zA-Z0-9:\-.]*\>[:,]\@!\)\([^>]*>(\)\@!+
+"   \ skip=+<!--\_.\{-}-->+
+"   \ end=+</\z1\_\s\{-}>+
+"   \ end=+/>+
+"   \ keepend
+"   \ extend
 syn region jsxRegion
-  \ contains=@Spell,@XMLSyntax,jsxRegion,jsxChild,jsBlock,javascriptBlock
-  \ start=+\%(<\|\w\)\@<!<\z([a-zA-Z][a-zA-Z0-9:\-.]*\>[:,]\@!\)\([^>]*>(\)\@!+
+  \ contains=xmlTag,xmlEndTag,xmlCdata,jsxRegion,xmlComment,xmlEntity,xmlProcessing,@xmlRegionHook,@Spell,jsxChild,jsBlock,javascriptBlock
+  \ start=+\%(<\|\w\)\@<!<\z([a-zA-Z][a-zA-Z0-9:\-.]*\|>\@=\)+
   \ skip=+<!--\_.\{-}-->+
   \ end=+</\z1\_\s\{-}>+
-  \ end=+/>+
+  \ matchgroup=xmlEndTag end=+/>+
+  \ fold
   \ keepend
   \ extend
 

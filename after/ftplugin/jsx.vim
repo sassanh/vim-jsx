@@ -10,7 +10,9 @@
 if exists("loaded_matchit")
   let b:match_ignorecase = 0
   let b:match_words = '(:),\[:\],{:},<:>,' .
-        \ '<\@<=\([^/][^ \t>]*\)[^>]*\%(/\@<!>\|$\):<\@<=/\1>'
+              \ '<\@<=\([^/ <][^ \t>]*\)[^>]*:/>' .
+              \ '<\@<=\([^/ <][^ \t>]*\)[^>]*\%(/\@<!>\|$\):/\w*>'
+  let b:match_skip='s:comment\|string\|jsArrowFunction\|jsOperator'
 endif
 
 setlocal suffixesadd+=.jsx
