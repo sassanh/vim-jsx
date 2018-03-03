@@ -29,22 +29,19 @@ endif
 "   - jelera/vim-javascript-syntax: javascriptBlock
 "   - othree/yajs.vim:              javascriptNoReserved
 
+syn region   xmlTag
+  \ matchgroup=xmlTag start=+<[^ /!?<"']\@=+
+  \ matchgroup=xmlTag end=+>+
+  \ contains=xmlError,xmlTagName,xmlAttrib,xmlEqual,xmlString,@xmlStartTagHook
+
+syn match   xmlEndTag
+  \ +</[^ /!?<"']*>+
+  \ contains=xmlNamespace,xmlAttribPunct,@xmlTagHook
+
 
 " JSX attributes should color as JS.  Note the trivial end pattern; we let
 " jsBlock take care of ending the region.
 syn region xmlString contained start=+{+ end=++ contains=jsBlock,javascriptBlock
-
-" XMLSyntax doesn't support JSXFragment so we need to add it.
-syn region   xmlTag
-\ matchgroup=xmlTag start=+<[^ /!?<"']\@=+
-\ matchgroup=xmlTag end=+>+
-\ contained
-\ contains=xmlError,xmlTagName,xmlAttrib,xmlEqual,xmlString,@xmlStartTagHook
-
-syn match   xmlEndTag
-\ +</[^ /!?<"']*>+
-\ contained
-\ contains=xmlNamespace,xmlAttribPunct,@xmlTagHook
 
 " JSX child blocks behave just like JSX attributes, except that (a) they are
 " syntactically distinct, and (b) they need the syn-extend argument, or else

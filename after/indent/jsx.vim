@@ -19,6 +19,9 @@ if exists('s:did_indent')
   let b:did_indent=s:did_indent
 endif
 
+let b:xml_indent_open = '.\{-}<[^ /!?<"'']\@='
+let b:xml_indent_close = '.\{-}</[^ /!?<>"'']\@='
+
 setlocal indentexpr=GetJsxIndent()
 
 " JS indentkeys
